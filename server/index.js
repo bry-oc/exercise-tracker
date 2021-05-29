@@ -65,6 +65,17 @@ app.post('/api/users', (req, res) => {
     })
 });
 
+//get all users
+app.get('/api/users', (req, res) => {
+    User.find({}, {username: 1}, {_id: 1}, function(err, users){
+        if(err) {
+            return console.error(err);
+        } else {
+            return res.json({users})
+        }
+    })
+});
+
 app.listen(PORT, () => {
     console.log(`App is listening on port ${PORT}`);
 });
