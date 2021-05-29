@@ -71,7 +71,7 @@ app.get('/api/users', (req, res) => {
         if(err) {
             return console.error(err);
         } else {
-            return res.json({users})
+            return res.json(users)
         }
     })
 });
