@@ -121,7 +121,33 @@ app.post('/api/users/:_id/exercises', upload.none(), (req, res) => {
                 }
             });
         } else {
-            return res.json({ error: "User was not found." })
+            return res.json({ error: "User was not found." });
+        }
+    });
+});
+
+//get request to /api/users/:id/logs
+//retrieve full exercise log of any user
+//returned response will be the user object, a count object of number of exercises, and a log array of each exercise(description, duration, date)
+//you can add from, to, limit parameters to retrieve part of the log
+app.get('/api/users/:id/logs', (req, res) => {
+    const userId = req.params.id;
+    const from = req.query.from;
+    const to = req.query.to;
+    const limit = req.query.limit;
+    console.log(from);
+    console.log(to);
+    console.log(limit);
+    console.log(userId);
+    User.findById({_id: userId}, function(err, user) {
+        if(err){
+            return console.error(err)
+        } else if (user) {
+            const count = user.exercises.length;
+            const log = user.exercises;
+            return res.json({_id: user._id, username: user.username, count: count, log: user.exercises});
+        } else {
+            return res.json({ error: "User was not found."});
         }
     });
 });
