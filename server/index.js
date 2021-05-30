@@ -1,12 +1,13 @@
 const cors = require("cors");
 const dotenv = require("dotenv").config();
 const express = require("express");
-const formidable = require("formidable");
 const mongoose = require("mongoose");
+const multer = require("multer");
 const path = require("path");
 const PORT = process.env.PORT || 3001;
 
 const app = express();
+const upload = multer();
 
 // parsing json
 app.use(express.json());
@@ -39,6 +40,9 @@ const userSchema = new mongoose.Schema({
 
 const Exercise = mongoose.model('Exercise', exerciseSchema);
 const User = mongoose.model('User', userSchema);
+
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 app.get('/', (req, res) => {
     res.json({ message: "Hello World!" });
@@ -84,62 +88,28 @@ app.get('/api/users', (req, res) => {
 //form data: description, duration, optional data
 //no date provided => use current date
 //return user with exercises
-app.post('/api/users/:_id/exercises', (req, res, next) => {
+app.post('/api/users/:_id/exercises', upload.none(), (req, res) => {
     const userId = req.params._id;
 
-    const form = formidable({ multiples: true });
-
-    form.parse(req, (err, fields, files) => {
-        if (err) {
-            next(err);
-            return;
-        }
-        const description = fields.description;
-        const duration = fields.duration;
-        let date = fields.date;
-        if (date === undefined) {
-            console.log("undefined");
-            date = new Date();
-            date = date.toString();
-            date = date.slice(0, 15);
-        } else {
-            date = new Date(date);
-            date = date.toString();
-            date = date.slice(0, 15);
-        }
-        const newExercise = { description: description, duration: duration, date: date };
-        User.findById({ _id: userId }, function (err, user) {
-            if (err) {
-                return console.error(err);
-            } else if (user) {
-                user.exercises.push(newExercise);
-                user.save(function (err, data) {
-                    if (err) {
-                        return console.error(err);
-                    } else {
-                        return res.json({ _id: user._id, username: user.username, date: date, duration: duration, description: description });
-                    }
-                });
-            } else {
-                return res.json({ error: "User was not found." })
-            }
-        });
-    });
-
-    /*
     const description = req.body.description;
-    const duration = req.body.duration;
+    const duration = parseInt(req.body.duration);
+    console.log(typeof(duration));
     let date = req.body.date;
 
     if (date === undefined) {
         console.log("undefined");
         date = new Date();
+        date.setHours(0,0,0,0);
+        console.log(date)
         date = date.toString();
         date = date.slice(0, 15);
+        console.log(date)
     } else {
-        date = new Date(date);
+        console.log("body-date: " +date);
+        date = new Date(date+"T00:00:00");
         date = date.toString();
         date = date.slice(0, 15);
+        console.log("new-date: " +date);
     }
     const newExercise = { description: description, duration: duration, date: date };
     User.findById({ _id: userId }, function (err, user) {
@@ -158,11 +128,6 @@ app.post('/api/users/:_id/exercises', (req, res, next) => {
             return res.json({ error: "User was not found." })
         }
     });
-    */
-});
-
-app.post('/api/testForms', (req, res) => {
-
 });
 
 
