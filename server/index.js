@@ -93,23 +93,19 @@ app.post('/api/users/:_id/exercises', upload.none(), (req, res) => {
 
     const description = req.body.description;
     const duration = parseInt(req.body.duration);
-    console.log(typeof(duration));
     let date = req.body.date;
 
     if (date === undefined) {
-        console.log("undefined");
+        console.log("no date was provided.");
         date = new Date();
-        date.setHours(0,0,0,0);
-        console.log(date)
         date = date.toString();
         date = date.slice(0, 15);
-        console.log(date)
+        console.log("today's date: " +date);
     } else {
-        console.log("body-date: " +date);
-        date = new Date(date+"T00:00:00");
+        date = new Date(date);
         date = date.toString();
         date = date.slice(0, 15);
-        console.log("new-date: " +date);
+        console.log("the provided date: " +date);
     }
     const newExercise = { description: description, duration: duration, date: date };
     User.findById({ _id: userId }, function (err, user) {
