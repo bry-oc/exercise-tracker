@@ -4,6 +4,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const multer = require("multer");
 const path = require("path");
+const { start } = require("repl");
 const PORT = process.env.PORT || 3001;
 
 const app = express();
@@ -102,7 +103,8 @@ app.post('/api/users/:_id/exercises', upload.none(), (req, res) => {
         date = date.slice(0, 15);
         console.log("today's date: " +date);
     } else {
-        date = new Date(date);
+        console.log(date);
+        date = new Date(date+"T00:00:00");
         date = date.toString();
         date = date.slice(0, 15);
         console.log("the provided date: " +date);
@@ -134,18 +136,25 @@ app.get('/api/users/:id/logs', (req, res) => {
     const userId = req.params.id;
     const from = req.query.from;
     const to = req.query.to;
-    const limit = req.query.limit;
-    console.log(from);
-    console.log(to);
-    console.log(limit);
-    console.log(userId);
-    User.findById({_id: userId}, function(err, user) {
+    const limit = parseInt(req.query.limit);
+
+    let startDate = new Date(from+"T00:00:00");
+    let endDate = new Date(to+"T00:00:00");
+
+    User.findById({_id: userId}, {exercises: {$slice: limit}}, function(err, user) {
         if(err){
             return console.error(err)
-        } else if (user) {
-            const count = user.exercises.length;
-            const log = user.exercises;
-            return res.json({_id: user._id, username: user.username, count: count, log: user.exercises});
+        } else if (user) {            
+            if(from && to){
+                let result = user.exercises.filter((item) => {
+                    dateFormat = new Date(item.date);
+                    return dateFormat >= startDate && dateFormat <= endDate;
+                });
+                return res.json({_id: user._id, username: user.username, count: result.length, log: result});
+            } else {
+                const count = user.exercises.length;
+                return res.json({_id: user._id, username: user.username, count: count, log: user.exercises});
+            }
         } else {
             return res.json({ error: "User was not found."});
         }
