@@ -28,23 +28,21 @@ db.once("open", function () {
     console.log("Connection Successful!");
 })
 
-const exerciseSchema = new mongoose.Schema({
-    description: { type: String },
-    duration: { type: String },
-    date: { type: Date }
-});
-
 const userSchema = new mongoose.Schema({
     username: { type: String },
     exercises: [Object]
 });
 
-const Exercise = mongoose.model('Exercise', exerciseSchema);
 const User = mongoose.model('User', userSchema);
 
-const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
+function isValidDate(date) {
+    const splitDate = date.split("-");
+    const year = splitDate[0];
+    const month = splitDate[1];
+    const day = splitDate[2];
+    const validDate = new Date(year, month - 1, day);
+    return validDate.getMonth() + 1 == month;
+}
 app.get('/', (req, res) => {
     res.json({ message: "Hello World!" });
 });
@@ -101,13 +99,16 @@ app.post('/api/users/:_id/exercises', upload.none(), (req, res) => {
         date = new Date();
         date = date.toString();
         date = date.slice(0, 15);
-        console.log("today's date: " +date);
+        console.log("today's date: " + date);
     } else {
-        console.log(date);
-        date = new Date(date+"T00:00:00");
+        dateRegex = /\d{4}-\d{2}-\d{2}/;
+        if (!dateRegex.test(date) || !isValidDate(date)) {
+            return res.json({ error: "Please enter a valid date" });
+        }
+        date = new Date(date + "T00:00:00");
         date = date.toString();
         date = date.slice(0, 15);
-        console.log("the provided date: " +date);
+        console.log("the provided date: " + date);
     }
     const newExercise = { description: description, duration: duration, date: date };
     User.findById({ _id: userId }, function (err, user) {
@@ -138,25 +139,31 @@ app.get('/api/users/:id/logs', (req, res) => {
     const to = req.query.to;
     const limit = parseInt(req.query.limit);
 
-    let startDate = new Date(from+"T00:00:00");
-    let endDate = new Date(to+"T00:00:00");
 
-    User.findById({_id: userId}, {exercises: {$slice: limit}}, function(err, user) {
-        if(err){
+
+    User.findById({ _id: userId }, { exercises: { $slice: limit } }, function (err, user) {
+        if (err) {
             return console.error(err)
-        } else if (user) {            
-            if(from && to){
+        } else if (user) {
+            if (from && to) {
+                dateRegex = /\d{4}-\d{2}-\d{2}/;
+                if (!dateRegex.test(from) || !isValidDate(from) || !dateRegex.test(to) || !isValidDate(to)) {
+                    return res.json({ error: "The date range requested is not valid" });
+                }
+                let startDate = new Date(from + "T00:00:00");
+                let endDate = new Date(to + "T00:00:00");
+
                 let result = user.exercises.filter((item) => {
                     dateFormat = new Date(item.date);
                     return dateFormat >= startDate && dateFormat <= endDate;
                 });
-                return res.json({_id: user._id, username: user.username, count: result.length, log: result});
+                return res.json({ _id: user._id, username: user.username, count: result.length, log: result });
             } else {
                 const count = user.exercises.length;
-                return res.json({_id: user._id, username: user.username, count: count, log: user.exercises});
+                return res.json({ _id: user._id, username: user.username, count: count, log: user.exercises });
             }
         } else {
-            return res.json({ error: "User was not found."});
+            return res.json({ error: "User was not found." });
         }
     });
 });
