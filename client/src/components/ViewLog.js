@@ -1,6 +1,6 @@
 function ViewLog(){
     return(
-        <div>
+        <div className="wrapper">
             <h2>View Exercise Log!</h2>
         </div>
     )

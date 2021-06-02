@@ -1,6 +1,6 @@
 function AddExercise(){
     return(
-        <div>
+        <div className="wrapper">
             <h2>Add Exercise!</h2>
         </div>
     )
