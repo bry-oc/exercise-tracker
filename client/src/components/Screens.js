@@ -1,25 +1,28 @@
 import { Route, Switch } from 'react-router-dom';
 import Welcome from './Welcome';
+import CreateUser from './CreateUser';
+import AddExercise from './AddExercise';
+import ViewLog from './ViewLog';
 
-function CreateUser(){
+function Screens(){
     return(
         <div>
             <Switch>
                 <Route exact path="/">
-                    < Welcome />
+                    <Welcome />
                 </Route>
                 <Route path="/createuser">
-                    <h2>Create User!</h2>
+                    <CreateUser />
                 </Route>
                 <Route path="/addexercise">
-                    <h2>Add Exercise!</h2>
+                    <AddExercise />
                 </Route>
                 <Route path="/viewlog">
-                    <h2>View Log!</h2>
+                    <ViewLog />
                 </Route>
             </Switch>            
         </div>
     )
 }
 
-export default CreateUser;
+export default Screens;
