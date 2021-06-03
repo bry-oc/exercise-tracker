@@ -1,7 +1,57 @@
 function ViewLog(){
+    let viewLog = (e) => {
+        e.preventDefault();
+        const userId = e.target._id.value;
+        const from = e.target.from.value;
+        const to = e.target.to.value;
+        const limit = e.target.limit.value;
+
+        let url = "/api/users/" +userId+ "/logs";
+
+        if((from !== "" && to !== "") || limit !== ""){
+            url = url.concat("?")
+            if(from !== "" && to !== ""){
+                url = url.concat("to="+to);
+                url = url.concat("&from="+from);
+                if(limit !== ""){
+                    url = url.concat("&limit="+limit);
+                }
+            } else if(limit !== ""){
+                url = url.concat("limit="+limit);
+            }
+        }
+
+        fetch(url)
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data);
+            })
+
+    }
     return(
         <div className="wrapper">
-            <h2>View Exercise Log!</h2>
+            <div className="title">
+                <h2>View Exercise Log!</h2>
+            </div>
+            <form className="log-form" onSubmit={viewLog}>
+                <label htmlFor="_id">User ID (Required): </label>
+                <br></br>
+                <input type="text" name="_id" id="_id"></input>
+                <br></br><br></br>
+                <label htmlFor="to">Start Date(YYYY-MM-DD): </label>
+                <br></br>
+                <input type="text" name="to" id="to"></input>
+                <br></br><br></br>
+                <label htmlFor="from">End Date(YYYY-MM-DD): </label>
+                <br></br>
+                <input type="text" name="from" id="from"></input>
+                <br></br><br></br>
+                <label htmlFor="label">Max Exercises Shown: </label>
+                <br></br>
+                <input type="text" name="limit" id="limit"></input>
+                <br></br><br></br>
+                <button id="log-submit" type="submit">View Log</button>
+            </form>            
         </div>
     )
 }

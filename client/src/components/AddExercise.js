@@ -1,5 +1,5 @@
 function AddExercise(){
-    
+
     let addExercise = (e) => {
         e.preventDefault();
         const userId = e.target._id.value;
@@ -42,7 +42,7 @@ function AddExercise(){
                 <br></br>
                 <input type="text" name="duration" id="duration"></input>
                 <br></br><br></br>
-                <label htmlFor="date">Date: </label>
+                <label htmlFor="date">Date (YYYY-MM-DD): </label>
                 <br></br>
                 <input type="text" name="date" id="date"></input>
                 <br></br><br></br>

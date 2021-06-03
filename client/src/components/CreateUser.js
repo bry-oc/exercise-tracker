@@ -30,7 +30,7 @@ function CreateUser(){
                 <label id="username-label" htmlFor="username">username</label>
                 <br></br>
                 <input id="username" type="text" name="username"></input>
-                <br></br>
+                <br></br><br></br>
                 <button id="user-submit" type="submit">Create User</button>
             </form>
             <div>
