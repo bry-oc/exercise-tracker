@@ -1,34 +1,45 @@
-function ViewLog(){
-    let viewLog = (e) => {
+import React from 'react';
+
+function ViewLog() {
+    const [tableData, setTableData] = React.useState([]);
+
+    const viewLog = (e) => {
         e.preventDefault();
         const userId = e.target._id.value;
         const from = e.target.from.value;
         const to = e.target.to.value;
         const limit = e.target.limit.value;
 
-        let url = "/api/users/" +userId+ "/logs";
+        let url = "/api/users/" + userId + "/logs";
 
-        if((from !== "" && to !== "") || limit !== ""){
+        if ((from !== "" && to !== "") || limit !== "") {
             url = url.concat("?")
-            if(from !== "" && to !== ""){
-                url = url.concat("to="+to);
-                url = url.concat("&from="+from);
-                if(limit !== ""){
-                    url = url.concat("&limit="+limit);
+            if (from !== "" && to !== "") {
+                url = url.concat("to=" + to);
+                url = url.concat("&from=" + from);
+                if (limit !== "") {
+                    url = url.concat("&limit=" + limit);
                 }
-            } else if(limit !== ""){
-                url = url.concat("limit="+limit);
+            } else if (limit !== "") {
+                url = url.concat("limit=" + limit);
             }
         }
 
         fetch(url)
             .then((res) => res.json())
             .then((data) => {
-                console.log(data);
+                if (data.error) {
+                    console.log(data.error);
+                    setTableData([]);
+                } else {
+                    console.log(data);
+                    setTableData(data.log);
+                    console.log(tableData);
+                }
             })
-
     }
-    return(
+    
+    return (
         <div className="wrapper">
             <div className="title">
                 <h2>View Exercise Log!</h2>
@@ -51,7 +62,24 @@ function ViewLog(){
                 <input type="text" name="limit" id="limit"></input>
                 <br></br><br></br>
                 <button id="log-submit" type="submit">View Log</button>
-            </form>            
+                <br></br><br></br>
+                {tableData.length !== 0 ? <table>
+                    <tbody>
+                        <tr>
+                            <th>Description</th>
+                            <th>Duration</th>
+                            <th>Date</th>
+                        </tr>
+                        {tableData.map((item) => {
+                            return <tr>
+                                <td>{item.description}</td>
+                                <td>{item.duration}</td>
+                                <td>{item.date}</td>
+                            </tr>
+                        })}
+                    </tbody>
+                </table> : ""}                
+            </form>
         </div>
     )
 }

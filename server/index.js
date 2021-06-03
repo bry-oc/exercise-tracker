@@ -93,8 +93,7 @@ app.post('/api/users/:_id/exercises', upload.none(), (req, res) => {
     const description = req.body.description;
     const duration = parseInt(req.body.duration);
     let date = req.body.date;
-
-    if (date === undefined) {
+    if (date === undefined || date === "") {
         console.log("no date was provided.");
         date = new Date();
         date = date.toString();
@@ -113,7 +112,7 @@ app.post('/api/users/:_id/exercises', upload.none(), (req, res) => {
     const newExercise = { description: description, duration: duration, date: date };
     User.findById({ _id: userId }, function (err, user) {
         if (err) {
-            return console.error(err);
+            return res.json({error: "There was an error with the provided user id."})
         } else if (user) {
             user.exercises.push(newExercise);
             user.save(function (err, data) {
@@ -143,7 +142,7 @@ app.get('/api/users/:id/logs', (req, res) => {
 
     User.findById({ _id: userId }, { exercises: { $slice: limit } }, function (err, user) {
         if (err) {
-            return console.error(err)
+            return res.json({error: "There was an error with the provided user id."})
         } else if (user) {
             if (from && to) {
                 dateRegex = /\d{4}-\d{2}-\d{2}/;
