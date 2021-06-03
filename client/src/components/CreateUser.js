@@ -27,9 +27,9 @@ function CreateUser(){
                 <h2>Create User!</h2>
             </div>
             <form id="createuser" onSubmit={createUser}>
-                <label id="username-label">username</label>
+                <label id="username-label" htmlFor="username">username</label>
                 <br></br>
-                <input id="username" type="text"></input>
+                <input id="username" type="text" name="username"></input>
                 <br></br>
                 <button id="user-submit" type="submit">Create User</button>
             </form>
