@@ -38,11 +38,11 @@ function ViewLog() {
                 }
             })
     }
-    
+
     return (
         <div className="wrapper">
             <div className="title">
-                <h2>View Exercise Log!</h2>
+                <h2>View Exercise Log</h2>
             </div>
             <form className="log-form" onSubmit={viewLog}>
                 <label htmlFor="_id">User ID (Required): </label>
@@ -61,25 +61,25 @@ function ViewLog() {
                 <br></br>
                 <input type="text" name="limit" id="limit"></input>
                 <br></br><br></br>
-                <button id="log-submit" type="submit">View Log</button>
+                <button id="log-submit" type="submit">View Exercise Log</button>
                 <br></br><br></br>
-                {tableData.length !== 0 ? <table>
-                    <tbody>
-                        <tr>
-                            <th>Description</th>
-                            <th>Duration</th>
-                            <th>Date</th>
-                        </tr>
-                        {tableData.map((item) => {
-                            return <tr>
-                                <td>{item.description}</td>
-                                <td>{item.duration}</td>
-                                <td>{item.date}</td>
-                            </tr>
-                        })}
-                    </tbody>
-                </table> : ""}                
             </form>
+            {tableData.length !== 0 ? <table>
+                <tbody>
+                    <tr>
+                        <th>Description</th>
+                        <th>Duration</th>
+                        <th>Date</th>
+                    </tr>
+                    {tableData.map((item) => {
+                        return <tr>
+                            <td>{item.description}</td>
+                            <td>{item.duration}</td>
+                            <td>{item.date}</td>
+                        </tr>
+                    })}
+                </tbody>
+            </table> : ""}
         </div>
     )
 }

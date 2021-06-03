@@ -31,7 +31,7 @@ function AddExercise(){
     return(
         <div className="wrapper">
             <div className="title">
-                <h2>Add Exercise!</h2>
+                <h2>Add Exercise</h2>
             </div>
             <form className="add-exercise" onSubmit={addExercise}>
                 <label htmlFor="_id">User ID:</label>

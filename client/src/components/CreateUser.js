@@ -2,10 +2,17 @@ import React from 'react';
 
 function CreateUser(){
     const [userId, setUserId] = React.useState(null);
+    const [warning, setWarning] = React.useState("");
 
     let createUser = (e) => {
         e.preventDefault();
         const username = e.target.username.value;
+
+        if(username == "") {
+            setWarning("Please enter a username.");
+            return;
+        }
+
         fetch('/api/users', {
             method: 'POST',
             headers: {
@@ -24,16 +31,17 @@ function CreateUser(){
     return(
         <div className="wrapper">
             <div className="title">
-                <h2>Create User!</h2>
+                <h2>Create User</h2>
             </div>
             <form id="createuser" onSubmit={createUser}>
-                <label id="username-label" htmlFor="username">username</label>
+                <label id="username-label" htmlFor="username">Username:</label>
                 <br></br>
                 <input id="username" type="text" name="username"></input>
                 <br></br><br></br>
                 <button id="user-submit" type="submit">Create User</button>
             </form>
             <div>
+                <p>{warning != "" ? warning : ""}</p>
                 <p>{userId ? "user id: " +userId : ""}</p>
             </div>
         </div>
