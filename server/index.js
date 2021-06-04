@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors({ optionsSuccessStatus: 200 }));
 app.use(express.static(path.resolve(__dirname, '../client/build')));
 
-mongoose.connect(process.env.MONGO_URI_TEST, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.MONGO_URI_LIVE, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const db = mongoose.connection;
 
