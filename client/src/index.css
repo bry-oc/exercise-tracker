@@ -25,7 +25,8 @@ body {
 }
 .wrapper p {
   line-height: 1.6;
-  padding: 40px;
+  padding: 0 40px;
+  font-weight: 500;
 }
 .wrapper input, button {
   height: 25px;
