@@ -1,7 +1,9 @@
 import React from 'react';
+import $ from "jquery";
 
 function AddExercise(){
     const [warning, setWarning] = React.useState("");
+    const [alert, setAlert] = React.useState("");
 
     let addExercise = (e) => {
         e.preventDefault();
@@ -30,9 +32,13 @@ function AddExercise(){
         .then((data) => {
             if (data.error) {
                 setWarning(data.error);
+                setAlert("");
             } else {
                 setWarning("");
                 console.log(data);
+                setAlert("Exercise Added!");
+                $("#alert").fadeOut(0);
+                $("#alert").fadeIn(1000);                
             }
         })
     }
@@ -62,6 +68,7 @@ function AddExercise(){
                 <button id="exercise-submit" type="submit">Add Exercise</button>
             </form>
             {warning !== "" ? <p className="warning">{warning}</p> : null}
+            {alert !== "" ? <p className="alert" id="alert">{alert}</p> : null}
         </div>
     )
 }
