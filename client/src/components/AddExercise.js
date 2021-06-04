@@ -1,4 +1,7 @@
+import React from 'react';
+
 function AddExercise(){
+    const [warning, setWarning] = React.useState("");
 
     let addExercise = (e) => {
         e.preventDefault();
@@ -6,6 +9,11 @@ function AddExercise(){
         const description = e.target.description.value;
         const duration = e.target.duration.value;
         const date = e.target.date.value;
+
+        if(userId === ""){
+            setWarning("Please enter a user id.");
+            return;
+        }
 
         const formData = new FormData();
         formData.append('description', description);
@@ -21,8 +29,9 @@ function AddExercise(){
         .then((res) => res.json())
         .then((data) => {
             if (data.error) {
-                console.log(data.error);
+                setWarning(data.error);
             } else {
+                setWarning("");
                 console.log(data);
             }
         })
@@ -52,7 +61,7 @@ function AddExercise(){
                 <br></br><br></br>
                 <button id="exercise-submit" type="submit">Add Exercise</button>
             </form>
-            
+            {warning !== "" ? <p className="warning">{warning}</p> : null}
         </div>
     )
 }

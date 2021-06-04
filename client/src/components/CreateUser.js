@@ -8,7 +8,7 @@ function CreateUser(){
         e.preventDefault();
         const username = e.target.username.value;
 
-        if(username == "") {
+        if(username === "") {
             setWarning("Please enter a username.");
             return;
         }
@@ -24,6 +24,7 @@ function CreateUser(){
         })
             .then((res) => res.json())
             .then((data) => {
+                setWarning("");
                 setUserId(data._id);
             })
     }
@@ -41,8 +42,8 @@ function CreateUser(){
                 <button id="user-submit" type="submit">Create User</button>
             </form>
             <div>
-                <p>{warning != "" ? warning : ""}</p>
-                <p>{userId ? "user id: " +userId : ""}</p>
+                {warning !== "" ? <p className="warning">{warning}</p> : null}
+                {userId ? <p>{"user id: " +userId}</p> : null}
             </div>
         </div>
 

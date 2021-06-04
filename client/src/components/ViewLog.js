@@ -2,6 +2,7 @@ import React from 'react';
 
 function ViewLog() {
     const [tableData, setTableData] = React.useState([]);
+    const [warning, setWarning] = React.useState("");
 
     const viewLog = (e) => {
         e.preventDefault();
@@ -9,6 +10,11 @@ function ViewLog() {
         const from = e.target.from.value;
         const to = e.target.to.value;
         const limit = e.target.limit.value;
+
+        if (userId === "") {
+            setWarning("Please enter a user id.");
+            return;
+        }
 
         let url = "/api/users/" + userId + "/logs";
 
@@ -33,6 +39,7 @@ function ViewLog() {
                     setTableData([]);
                 } else {
                     console.log(data);
+                    setWarning("");
                     setTableData(data.log);
                     console.log(tableData);
                 }
@@ -64,15 +71,18 @@ function ViewLog() {
                 <button id="log-submit" type="submit">View Exercise Log</button>
                 <br></br><br></br>
             </form>
+            {warning !== "" ? <p className="warning">{warning}</p> : null}
             {tableData.length !== 0 ? <table>
-                <tbody>
+                <thead>
                     <tr>
                         <th>Description</th>
                         <th>Duration</th>
                         <th>Date</th>
                     </tr>
-                    {tableData.map((item) => {
-                        return <tr>
+                </thead>
+                <tbody>
+                    {tableData.map((item, index) => {
+                        return <tr key={index}>
                             <td>{item.description}</td>
                             <td>{item.duration}</td>
                             <td>{item.date}</td>

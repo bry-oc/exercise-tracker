@@ -17,6 +17,7 @@ body {
   align-items: center;
   margin-top: 40px;
   padding-bottom: 40px;
+  margin-bottom: 40px;
   text-align:center;
   background-color: cornflowerblue;
   border-radius: 15px;
@@ -38,9 +39,14 @@ body {
   padding-bottom: 20px;
   font-size: 28px;
 }
-input[type="text"], button, label
+.wrapper input[type="text"], button, label
 {
   font-size:18px;
+}
+.wrapper button {
+  height: 50px;
+  background-color: #37AF65;
+  color: #F3F3F3;
 }
 #navbar {
   background-color: cornflowerblue;
@@ -83,13 +89,25 @@ h2 {
 }
 table {
   table-layout:fixed;
-  width: 50%;
+  width: 35vw;
   margin-bottom: 20px;
+  border-collapse: collapse;
 }
-table, th, td {
+th {
+  background-color: #00008B;
+  color:white;
+}
+tr:nth-child(even){
+  background-color: #F8F8FF;
+}
+tr:nth-child(odd){
+  background-color: white;
+}
+th, td {
   text-align: left;
   border: 1px solid black;
   word-wrap: break-word;
+  padding: 5px;
 }
 
 @media screen and (max-width: 775px) {
