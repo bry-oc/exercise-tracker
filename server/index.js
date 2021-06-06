@@ -4,7 +4,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const multer = require("multer");
 const path = require("path");
-const { start } = require("repl");
 const PORT = process.env.PORT || 3001;
 
 const app = express();
